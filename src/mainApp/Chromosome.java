@@ -22,7 +22,7 @@ public class Chromosome implements Comparable {
 	private int border = ChromosomeComponent.DEFAULT_BORDER;
 	
 	//Setting seed for the Random object (Are we supposed to reproduce the same genome data for each chromsome, cuz I think that's what the specifications seem to be implying by setting the seed)
-	Random r = new Random(100010001);
+	Random r = new Random();
 	
 	/**
 	 * Creates a new Chromosome object

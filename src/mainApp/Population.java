@@ -7,8 +7,9 @@ public class Population {
     public ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome>();
     private int sizeOfPopulation = 100;
     private int genomeLength = 100;
-    public Chromosome prevC,nextC, prevCLow, nextCLow;
+    public double prevC,nextC, prevCLow, nextCLow;
     public int prevCAvg,nextCAvg;
+    public ArrayList<BestFitLine2D> lineArray = new ArrayList<>();
 
     public Population(){
     }
@@ -22,6 +23,7 @@ public class Population {
     public void initiatePopulation(){
         // chromosomes.removeAll(chromosomes);
         chromosomes = new ArrayList<Chromosome>();
+        lineArray = new ArrayList<BestFitLine2D>();
         for (int i = 0; i<sizeOfPopulation; i++){
             chromosomes.add(new Chromosome(genomeLength));
             chromosomes.get(i).initiateGene();
@@ -41,18 +43,20 @@ public class Population {
             this.chromosomes.remove(i);
             i-=1;
         }
-        prevC = this.chromosomes.get(0);
+        prevC = this.chromosomes.get(0).getFitnessScore();
         prevCAvg = calculateAvgFitness();
-        prevCLow = this.chromosomes.get((initialSize/2)-1);
+        prevCLow = this.chromosomes.get((initialSize/2)-1).getFitnessScore();
+        lineArray.add(new BestFitLine2D(prevC, prevCAvg, prevCLow));
+
         for (int j = 0; j < initialSize/2; j++){
             Chromosome newGenChromosome = new Chromosome(this.chromosomes.get(j).getChromosomeDataAsString());
             newGenChromosome.mutateGenes(mutationRate);
             this.chromosomes.add(newGenChromosome);
         }
         this.sortPopulation();
-        nextC = this.chromosomes.get(0);
-        nextCAvg = calculateAvgFitness();
-        nextCLow = this.chromosomes.get(this.chromosomes.size()-1);
+        // nextC = this.chromosomes.get(0);
+        // nextCAvg = calculateAvgFitness();
+        // nextCLow = this.chromosomes.get(this.chromosomes.size()-1);
         //this.giveFitness();
     }
 

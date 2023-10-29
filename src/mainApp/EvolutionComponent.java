@@ -116,7 +116,7 @@ public class EvolutionComponent extends JComponent {
       xLimit = (int)(this.getWidth()*0.92);
       yLimit = (int)(this.getHeight()*0.82);  
       this.drawOn(g2);
-      this.storeLines(g2);
+      this.drawLines(g2);
     }
 
     public void drawOn(Graphics2D g2){
@@ -165,37 +165,6 @@ public class EvolutionComponent extends JComponent {
     }
 
     public void storeLines(Graphics2D g2){
-      g2.translate(x, y);
-      if (this.population.prevC!=null && this.population.nextC!=null){
-        // int pX = (int)((double)(generationCount)*(((double)xWidth)/(double)generations));
-        // int nX = (int)((double)(generationCount+1)*(((double)xWidth)/(double)generations));
-
-        //Line of best fit
-        int pX = calculateX(generationCount);
-        int nX = calculateX(generationCount+1);
-        int pY = calculateY(this.population.prevC.getFitnessScore()); 
-        int nY = calculateY(this.population.nextC.getFitnessScore());
-
-        //Line of average
-        int pXAvg = pX;
-        int nXAvg = nX;
-        int pYAvg = calculateY(this.population.prevCAvg);
-        int nYAvg = calculateY(this.population.nextCAvg);
-
-        //Line of lowest
-        int pXLow = pX;
-        int nXLow = nX;
-        int pYLow = calculateY(this.population.prevCLow.getFitnessScore());
-        int nYLow = calculateY(this.population.nextCLow.getFitnessScore());
-
-        if (nX<=xWidth){
-          lineArray.add(new BestFitLine2D(pX, pY, nX, nY, pXAvg, pYAvg, nXAvg, nYAvg, pXLow, pYLow, nXLow, nYLow));
-          g2.setStroke(new BasicStroke(1));
-          g2.setColor(Color.black);
-          g2.drawRect(0,0,xWidth,yHeight);
-        }
-      }
-      g2.translate(-x,-y);
       drawLines(g2);
       // if (generationCount>=generations){
       //   g2.setColor(g2.getBackground());
@@ -228,35 +197,31 @@ public class EvolutionComponent extends JComponent {
 
     public void drawLines(Graphics2D g2){
       g2.translate(x, y);
-      if (this.population.prevC!=null && this.population.nextC!=null){
-        for (int i = 0; i < lineArray.size(); i++){
+      System.out.println(this.population.lineArray.size());
+        for (int i = 1; i < generations; i++){
+          if (i<this.population.lineArray.size()){
           //Line of best fit
-          int pX = lineArray.get(i).getX1();
-          int pY = lineArray.get(i).getY1();
-          int nX = lineArray.get(i).getX2();
-          int nY = lineArray.get(i).getY2();
+          int pX = calculateX(i-1);
+          int nX = calculateX(i);
+          int pY = calculateY(this.population.lineArray.get(i-1).getBestFitness());
+          int nY = calculateY(this.population.lineArray.get(i).getBestFitness());
           g2.setColor(Color.green);
           g2.setStroke(new BasicStroke(5));
           g2.drawLine(pX, pY, nX, nY);
 
           //Line of avg
-          pX = lineArray.get(i).getX1avg();
-          pY = lineArray.get(i).getY1avg();
-          nX = lineArray.get(i).getX2avg();
-          nY = lineArray.get(i).getY2avg();
+          pY = calculateY(this.population.lineArray.get(i-1).getAvgFitness());
+          nY = calculateY(this.population.lineArray.get(i).getAvgFitness());
           g2.setColor(Color.orange);
           g2.drawLine(pX, pY, nX, nY);
 
 
           //Line of lowest
           //TODO FIGURE OUT LOGIC FOR WHY THIS IS SO JAGGED; Assumably, u can use the array in such a way that the newest chromosome is preserved, and then the previous index where the last chromosome was preserved can be used to find the initial x,y, with the current chromsome being the final x,y. this may require restructuring of linearray rn.
-          pX = lineArray.get(i).getX1low();
-          pY = lineArray.get(i).getY1low();
-          nX = lineArray.get(i).getX2low();
-          nY = lineArray.get(i).getY2low();
+          pY = calculateY(this.population.lineArray.get(i-1).getLowFitness());
+          nY = calculateY(this.population.lineArray.get(i).getLowFitness());
           g2.setColor(Color.red);
           g2.drawLine(pX, pY, nX, nY);
-
         }
       }
       g2.translate(-x,-y);
