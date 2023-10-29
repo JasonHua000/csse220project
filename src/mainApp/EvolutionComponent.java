@@ -117,10 +117,13 @@ public class EvolutionComponent extends JComponent {
       yLimit = (int)(this.getHeight()*0.82);  
       this.drawOn(g2);
       this.drawLines(g2);
+      this.drawLegend(g2);
+      g2.drawString("Fitness over Generations", -x+(this.getWidth()/2), 10);
     }
 
     public void drawOn(Graphics2D g2){
       drawAxes(g2);
+      drawLegend(g2);
     }
 
     public void drawAxes(Graphics2D g2){
@@ -222,8 +225,25 @@ public class EvolutionComponent extends JComponent {
           nY = calculateY(this.population.lineArray.get(i).getLowFitness());
           g2.setColor(Color.red);
           g2.drawLine(pX, pY, nX, nY);
+          
         }
       }
       g2.translate(-x,-y);
+    }
+
+    public void drawLegend(Graphics2D g2){
+      g2.setColor(Color.green);
+      g2.fillRect(calculateX(95.0), calculateY(55.0), 20, 20);
+
+      g2.setColor(Color.orange);
+      g2.fillRect(calculateX(95.0), calculateY(40.0), 20, 20);
+      
+      g2.setColor(Color.red);
+      g2.fillRect(calculateX(95.0), calculateY(25.0), 20, 20);
+      
+      g2.setColor(Color.black);
+      g2.drawString("Best fitness", calculateX(98), calculateY(49));
+      g2.drawString("Ave fitness", calculateX(98), calculateY(34));
+      g2.drawString("Low fitness", calculateX(98), calculateY(19));
     }
 }

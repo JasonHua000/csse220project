@@ -36,5 +36,4 @@ public class BestFitLine2D {
         this.avgFitness = avgFitness;
         this.lowFitness = lowFitness;
     }
-
 }
