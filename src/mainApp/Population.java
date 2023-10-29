@@ -47,11 +47,17 @@ public class Population {
         prevCAvg = calculateAvgFitness();
         prevCLow = this.chromosomes.get((initialSize/2)-1).getFitnessScore();
         lineArray.add(new BestFitLine2D(prevC, prevCAvg, prevCLow));
-
+        ArrayList<Chromosome> cloneArray = new ArrayList<>();
+        for (Chromosome c : this.chromosomes){
+            cloneArray.add(new Chromosome(c.getChromosomeDataAsString()));
+        }
+        this.chromosomes = new ArrayList<Chromosome>();
         for (int j = 0; j < initialSize/2; j++){
-            Chromosome newGenChromosome = new Chromosome(this.chromosomes.get(j).getChromosomeDataAsString());
-            newGenChromosome.mutateGenes(mutationRate);
-            this.chromosomes.add(newGenChromosome);
+            for (int copy2 = 0; copy2 < 2; copy2++){
+                Chromosome newGenChromosome = new Chromosome(cloneArray.get(j).getChromosomeDataAsString());
+                newGenChromosome.mutateGenes(mutationRate);
+                this.chromosomes.add(newGenChromosome);
+        }
         }
         this.sortPopulation();
         // nextC = this.chromosomes.get(0);
