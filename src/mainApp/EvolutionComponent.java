@@ -18,13 +18,12 @@ public class EvolutionComponent extends JComponent {
     private double mutationRate;
     private String selection;
     private Boolean crossover;
-    private int x,y,xLimit,yLimit,xLimitClone,yLimitClone;
+    private int x,y,xLimit,yLimit,xWidth,yHeight;
     public int generationCount;
     public ArrayList<BestFitLine2D> lineArray = new ArrayList<BestFitLine2D>();
-    
 
     public EvolutionComponent() {
-		this.population = new Population();
+		  this.population = new Population();
     }
 
     public int getPopulationSize() {
@@ -110,7 +109,8 @@ public class EvolutionComponent extends JComponent {
 
     @Override
     protected void paintComponent(Graphics g) {
-      Graphics2D g2 = (Graphics2D) g;
+    Graphics2D g2 = (Graphics2D) g;
+    // TODO remove magic numbers
       x = (int)(0.04*this.getWidth());
       y = (int)(0.08*this.getHeight());
       xLimit = (int)(this.getWidth()*0.92);
@@ -123,44 +123,43 @@ public class EvolutionComponent extends JComponent {
       drawAxes(g2);
     }
 
-    public void drawAxes(Graphics2D g2) {
-        g2.drawRect(x, y, xLimitClone, yLimitClone);
-        drawXDivisions(g2);
-        drawYDivisions(g2);
+    public void drawAxes(Graphics2D g2){
+      g2.drawRect(x, y, xLimit, yLimit);
+      drawXDivisions(g2);
+      drawYDivisions(g2);
     }
-
 
     public void drawXDivisions(Graphics2D g2){
       // TODO FIGURE OUT WHY IT DOESNT UPDATE WHEN NUM OF GENERATIONS CHANGES
-      xLimitClone = xLimit - x;
-      yLimitClone = yLimit + y;
-      g2.translate(x, yLimitClone);
+      xWidth = xLimit - x;
+      yHeight = yLimit + y;
+      g2.translate(x, yHeight);
       int num = 0;
-      for (int i = 0; i <= xLimitClone; i+= xLimitClone/10){
+      for (int i = 0; i <= xWidth; i+= xWidth/10){
         String sNum = Integer.toString(num);
         g2.drawLine(i, -5, i, 5);
         g2.drawString(sNum, i, 20);
         num+=generations/10;
-        if ((i+(xLimitClone/10))>=xLimitClone){
-          xLimitClone = i;
+        if ((i+(xWidth/10))>=xWidth){
+          xWidth = i;
         }
       }
-      g2.translate(-x, -yLimitClone);
+      g2.translate(-x, -yHeight);
     }
 
     public void drawYDivisions(Graphics2D g2){
-      yLimitClone = yLimit - y;
+      yHeight = yLimit - y;
       g2.translate(x, y);
       int num = 100;
-      for (int i = 0; i <= yLimitClone; i+= yLimitClone/10){
+      for (int i = 0; i <= yHeight; i+= yHeight/10){
         String sNum = Integer.toString(num);
         g2.drawLine(5, i, -5, i);
         g2.drawString(sNum, -25, i+5);
         num-=10;
-        if ((i+yLimitClone/10)>=yLimitClone){
-          yLimitClone = i;
+        if ((i+yHeight/10)>=yHeight){
+          yHeight = i;
         }
-        //System.out.println(i+","+yLimitClone);
+        //System.out.println(i+","+yHeight);
       }
       g2.translate(-x, -y);
     }
@@ -168,15 +167,15 @@ public class EvolutionComponent extends JComponent {
     public void storeLines(Graphics2D g2){
       g2.translate(x, y);
       if (this.population.prevC!=null && this.population.nextC!=null){
-        int pX = (int)((double)(generationCount)*(((double)xLimitClone)/(double)generations));
-        int nX = (int)((double)(generationCount+1)*(((double)xLimitClone)/(double)generations));
-        int pY = (int)((double)yLimitClone-(double)((double)this.population.prevC.getFitnessScore()*(((double)yLimitClone)/100.0)));
-        int nY = (int)((double)yLimitClone-(double)((double)this.population.nextC.getFitnessScore()*(((double)yLimitClone)/100.0)));
-        if (nX<=xLimitClone){
+        int pX = (int)((double)(generationCount)*(((double)xWidth)/(double)generations));
+        int nX = (int)((double)(generationCount+1)*(((double)xWidth)/(double)generations));
+        int pY = (int)((double)yHeight-(double)((double)this.population.prevC.getFitnessScore()*(((double)yHeight)/100.0)));
+        int nY = (int)((double)yHeight-(double)((double)this.population.nextC.getFitnessScore()*(((double)yHeight)/100.0)));
+        if (nX<=xWidth){
           lineArray.add(new BestFitLine2D(pX, pY, nX, nY));
           g2.setStroke(new BasicStroke(1));
           g2.setColor(Color.black);
-          g2.drawRect(0,0,xLimitClone,yLimitClone);
+          g2.drawRect(0,0,xWidth,yHeight);
         }
       }
       g2.translate(-x,-y);
@@ -191,10 +190,10 @@ public class EvolutionComponent extends JComponent {
     // public void drawBestLine(Graphics2D g2){
     //   g2.translate(x, y);
     //   if (generationCount!=-1 && this.population.prevC!=null){
-    //     int pX = generationCount*((xLimitClone)/generations);
-    //     int nX = (generationCount+1)*((xLimitClone)/generations);
-    //     int pY = yLimitClone-(int)(this.population.prevC.getFitnessScore()*((yLimitClone)/100));
-    //     int nY = yLimitClone-(int)(this.population.nextC.getFitnessScore()*((yLimitClone)/100));
+    //     int pX = generationCount*((xWidth)/generations);
+    //     int nX = (generationCount+1)*((xWidth)/generations);
+    //     int pY = yHeight-(int)(this.population.prevC.getFitnessScore()*((yHeight)/100));
+    //     int nY = yHeight-(int)(this.population.nextC.getFitnessScore()*((yHeight)/100));
     //     xPoints[generationCount]=pX;
     //     xPoints[generationCount+1]=nX;
     //     yPoints[generationCount]=pY;
