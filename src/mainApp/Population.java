@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Population {
-    private ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome>();
+    public ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome>();
     private int sizeOfPopulation = 100;
     private int genomeLength = 100;
-    public Chromosome prevC;
-    public Chromosome nextC;
+    public Chromosome prevC,nextC, prevCLow, nextCLow;
+    public int prevCAvg,nextCAvg;
 
     public Population(){
-        this.initiatePopulation();
     }
 
     public Population(int sizeOfPopulation, int genomeLength){
@@ -21,7 +20,8 @@ public class Population {
     }
 
     public void initiatePopulation(){
-        chromosomes.removeAll(chromosomes);
+        // chromosomes.removeAll(chromosomes);
+        chromosomes = new ArrayList<Chromosome>();
         for (int i = 0; i<sizeOfPopulation; i++){
             chromosomes.add(new Chromosome(genomeLength));
             chromosomes.get(i).initiateGene();
@@ -42,6 +42,8 @@ public class Population {
             i-=1;
         }
         prevC = this.chromosomes.get(0);
+        prevCAvg = calculateAvgFitness();
+        prevCLow = this.chromosomes.get((initialSize/2)-1);
         for (int j = 0; j < initialSize/2; j++){
             Chromosome newGenChromosome = new Chromosome(this.chromosomes.get(j).getChromosomeDataAsString());
             newGenChromosome.mutateGenes(mutationRate);
@@ -49,7 +51,18 @@ public class Population {
         }
         this.sortPopulation();
         nextC = this.chromosomes.get(0);
+        nextCAvg = calculateAvgFitness();
+        nextCLow = this.chromosomes.get(this.chromosomes.size()-1);
         //this.giveFitness();
+    }
+
+    public int calculateAvgFitness(){
+        int avg = 0;
+        for (Chromosome chromosome : chromosomes){
+            avg+= chromosome.getFitnessScore();
+        }
+        avg = avg/chromosomes.size();
+        return avg;
     }
 
     //Debugger to check if the sorting by fitness gave the correct result

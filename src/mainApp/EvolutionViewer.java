@@ -133,6 +133,7 @@ public class EvolutionViewer {
                     }
                     else {
                         startEvolutionButton.setText("Start Evolution");
+                        System.out.println(evComponent.population.chromosomes.get(0).getChromosomeDataAsString());
                         timer.restart();
 
                         //TODO populationField might not be needed to be initialized here i think lawl
@@ -177,8 +178,12 @@ public class EvolutionViewer {
     public void handleDriverMain(){
         this.driverMain();
         //  this.evComponent.population.giveFitness(); //To check if the chromosomes were sorted according to fitness
-        //  for (int i = 0; i < 200; i++){
-        // this.evComponent.population.truncationSelection(1);}
+        // this.evComponent.population = new Population(200, 150); 
+        // for (int i = 0; i < 200; i++){
+        //     this.evComponent.population.truncationSelection(1);
+        //     this.evComponent.population.giveFitness();
+        // }
+        // System.out.println(this.evComponent.population.chromosomes.get(0).getChromosomeDataAsString());
         //  this.evComponent.population.giveFitness(); //To check if the chromosomes were sorted according to fitness
     }   
 

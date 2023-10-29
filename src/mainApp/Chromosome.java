@@ -40,6 +40,7 @@ public class Chromosome implements Comparable {
 
 	public Chromosome(String fileData){
 		this.fileData = fileData;
+		this.numOfGenes = this.fileData.length();
 		this.initiateGeneWithFile();
 		this.calcFitnessFuction();
 		//this.fitnessSmiley();
@@ -58,7 +59,7 @@ public class Chromosome implements Comparable {
 				fitnessScore+=1;
 			}
 		}
-		this.fitnessScore=(int)((double)((double)fitnessScore/(double)numOfGenes)*numOfGenes);
+		this.fitnessScore=(int)((double)((double)fitnessScore/(double)numOfGenes)*100);
 	}
 	
 	  public void fitnessSmiley() {
@@ -108,7 +109,7 @@ public class Chromosome implements Comparable {
 	 * ensures: that a numOfGenes Gene objects is initialized into the chromosome
 	 */
 	public void initiateGene() {
-		genes = new Gene[numOfGenes];
+		genes = new Gene[this.numOfGenes];
 		for (int i = 0; i < numPerColumn; i++) {
 			for (int j = 0; j < NUM_PER_ROW; j++) {
 				int bit = r.nextInt(0,2);

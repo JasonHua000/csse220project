@@ -167,20 +167,35 @@ public class EvolutionComponent extends JComponent {
     public void storeLines(Graphics2D g2){
       g2.translate(x, y);
       if (this.population.prevC!=null && this.population.nextC!=null){
-        int pX = (int)((double)(generationCount)*(((double)xWidth)/(double)generations));
-        int nX = (int)((double)(generationCount+1)*(((double)xWidth)/(double)generations));
-        int pY = (int)((double)yHeight-(double)((double)this.population.prevC.getFitnessScore()*(((double)yHeight)/100.0)));
-        int nY = (int)((double)yHeight-(double)((double)this.population.nextC.getFitnessScore()*(((double)yHeight)/100.0)));
+        // int pX = (int)((double)(generationCount)*(((double)xWidth)/(double)generations));
+        // int nX = (int)((double)(generationCount+1)*(((double)xWidth)/(double)generations));
+
+        //Line of best fit
+        int pX = calculateX(generationCount);
+        int nX = calculateX(generationCount+1);
+        int pY = calculateY(this.population.prevC.getFitnessScore()); 
+        int nY = calculateY(this.population.nextC.getFitnessScore());
+
+        //Line of average
+        int pXAvg = pX;
+        int nXAvg = nX;
+        int pYAvg = calculateY(this.population.prevCAvg);
+        int nYAvg = calculateY(this.population.nextCAvg);
+
+        //Line of lowest
+        int pXLow = pX;
+        int nXLow = nX;
+        int pYLow = calculateY(this.population.prevCLow.getFitnessScore());
+        int nYLow = calculateY(this.population.nextCLow.getFitnessScore());
+
         if (nX<=xWidth){
-          lineArray.add(new BestFitLine2D(pX, pY, nX, nY));
+          lineArray.add(new BestFitLine2D(pX, pY, nX, nY, pXAvg, pYAvg, nXAvg, nYAvg, pXLow, pYLow, nXLow, nYLow));
           g2.setStroke(new BasicStroke(1));
           g2.setColor(Color.black);
           g2.drawRect(0,0,xWidth,yHeight);
         }
       }
       g2.translate(-x,-y);
-      g2.setColor(Color.green);
-      g2.setStroke(new BasicStroke(5));
       drawLines(g2);
       // if (generationCount>=generations){
       //   g2.setColor(g2.getBackground());
@@ -203,15 +218,45 @@ public class EvolutionComponent extends JComponent {
     //   g2.translate(-x,-y);
     // }
 
+    public int calculateY(double y){
+      return (int)(yHeight-((double)y*((double)yHeight/100.0)));
+    }
+
+    public int calculateX(double x){
+      return (int)(x*((double)xWidth/generations));
+    }
+
     public void drawLines(Graphics2D g2){
       g2.translate(x, y);
       if (this.population.prevC!=null && this.population.nextC!=null){
         for (int i = 0; i < lineArray.size(); i++){
+          //Line of best fit
           int pX = lineArray.get(i).getX1();
           int pY = lineArray.get(i).getY1();
           int nX = lineArray.get(i).getX2();
           int nY = lineArray.get(i).getY2();
+          g2.setColor(Color.green);
+          g2.setStroke(new BasicStroke(5));
           g2.drawLine(pX, pY, nX, nY);
+
+          //Line of avg
+          pX = lineArray.get(i).getX1avg();
+          pY = lineArray.get(i).getY1avg();
+          nX = lineArray.get(i).getX2avg();
+          nY = lineArray.get(i).getY2avg();
+          g2.setColor(Color.orange);
+          g2.drawLine(pX, pY, nX, nY);
+
+
+          //Line of lowest
+          //TODO FIGURE OUT LOGIC FOR WHY THIS IS SO JAGGED; Assumably, u can use the array in such a way that the newest chromosome is preserved, and then the previous index where the last chromosome was preserved can be used to find the initial x,y, with the current chromsome being the final x,y. this may require restructuring of linearray rn.
+          pX = lineArray.get(i).getX1low();
+          pY = lineArray.get(i).getY1low();
+          nX = lineArray.get(i).getX2low();
+          nY = lineArray.get(i).getY2low();
+          g2.setColor(Color.red);
+          g2.drawLine(pX, pY, nX, nY);
+
         }
       }
       g2.translate(-x,-y);
