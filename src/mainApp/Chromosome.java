@@ -33,12 +33,8 @@ public class Chromosome implements Comparable {
 	 * Creates a new Chromosome object with different number of genes than the default 100
 	 * @param numOfGenes
 	 */
-	// Are we still adding the resizable geneSide according to frameWidth/Height?
-	// Will add it but not for Milestone 1 for now - need to ask Thomas
 	public Chromosome(int numOfGenes) {
 		this.numOfGenes = numOfGenes;
-		// this.geneSide = geneSide
-
 		this.numPerColumn = numOfGenes/NUM_PER_ROW;
 	}
 
@@ -46,6 +42,7 @@ public class Chromosome implements Comparable {
 		this.fileData = fileData;
 		this.initiateGeneWithFile();
 		this.calcFitnessFuction();
+		//this.fitnessSmiley();
 	}
 
 	//methods
@@ -61,7 +58,7 @@ public class Chromosome implements Comparable {
 				fitnessScore+=1;
 			}
 		}
-		this.fitnessScore=fitnessScore;
+		this.fitnessScore=(int)((double)((double)fitnessScore/(double)numOfGenes)*numOfGenes);
 	}
 	
 	  public void fitnessSmiley() {
@@ -122,6 +119,7 @@ public class Chromosome implements Comparable {
 
 		// TO SET THE FITNESS SCORE
 		this.calcFitnessFuction();
+		//this.fitnessSmiley();
 	}
 
 	
@@ -130,13 +128,14 @@ public class Chromosome implements Comparable {
 		numPerColumn = numOfGenes / NUM_PER_ROW;
 		for (int i = 0; i < numPerColumn; i++) {
 			for (int j = 0; j < NUM_PER_ROW; j++) {
-				char bit = this.fileData.charAt(i*numPerColumn+j);
+				char bit = this.fileData.charAt(i*NUM_PER_ROW+j);
 				this.genes[i*NUM_PER_ROW+j] = new Gene(bit, true, this.geneWidth*j + this.border, this.geneWidth*i, this.geneWidth);
 			}
 		}
 
 		// TO SET THE FITNESS SCORE
 		this.calcFitnessFuction();
+		//this.fitnessSmiley();
 	}
 
 	public void adjustGenePosition(){
@@ -154,6 +153,7 @@ public class Chromosome implements Comparable {
 			gene.mutate(mutationRate, this.numOfGenes);
 		}
 		this.calcFitnessFuction();
+		//this.fitnessSmiley();
 	}
 
 	/**

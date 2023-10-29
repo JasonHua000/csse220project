@@ -37,8 +37,6 @@ public class ChromosomeTest {
         assertEquals("0011001100", chromosome.getChromosomeDataAsString());
     }
 
-
-
 //    @Test
 //    public void testCalcFunction() {
 //        Chromosome chromosome = new Chromosome();
