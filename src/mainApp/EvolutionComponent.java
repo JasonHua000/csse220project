@@ -21,6 +21,7 @@ public class EvolutionComponent extends JComponent {
     private int x,y,xLimit,yLimit,xLimitClone,yLimitClone;
     public int generationCount;
     public ArrayList<BestFitLine2D> lineArray = new ArrayList<BestFitLine2D>();
+    
 
     public EvolutionComponent() {
 		this.population = new Population();
@@ -122,11 +123,12 @@ public class EvolutionComponent extends JComponent {
       drawAxes(g2);
     }
 
-    public void drawAxes(Graphics2D g2){
-      g2.drawRect(x, y, xLimit, yLimit);
-      drawXDivisions(g2);
-      drawYDivisions(g2);
+    public void drawAxes(Graphics2D g2) {
+        g2.drawRect(x, y, xLimitClone, yLimitClone);
+        drawXDivisions(g2);
+        drawYDivisions(g2);
     }
+
 
     public void drawXDivisions(Graphics2D g2){
       // TODO FIGURE OUT WHY IT DOESNT UPDATE WHEN NUM OF GENERATIONS CHANGES
