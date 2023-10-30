@@ -231,19 +231,34 @@ public class EvolutionComponent extends JComponent {
       g2.translate(-x,-y);
     }
 
-    public void drawLegend(Graphics2D g2){
-      g2.setColor(Color.green);
-      g2.fillRect(calculateX(95.0), calculateY(55.0), 20, 20);
+    
 
+    public void drawLegend(Graphics2D g2) {
+      int legendBoxSize = 20; // Size of the legend box
+      int legendXMargin = 50; // Margin from the right edge of the component
+      int legendYMargin = 10; // Margin from the top of the component
+      int textMargin = 10; // Additional margin between text and legend box
+ 
+      int legendX = getWidth() - legendXMargin - legendBoxSize;
+      int legendY1 = legendYMargin + (getHeight() - legendYMargin * 2) / 4 - legendBoxSize / 2;
+      int legendY2 = legendY1 + legendBoxSize + 5;
+      int legendY3 = legendY2 + legendBoxSize + 5;
+ 
+      g2.setColor(Color.green);
+      g2.fillRect(legendX, legendY1, legendBoxSize, legendBoxSize);
       g2.setColor(Color.orange);
-      g2.fillRect(calculateX(95.0), calculateY(40.0), 20, 20);
-      
+      g2.fillRect(legendX, legendY2, legendBoxSize, legendBoxSize);
       g2.setColor(Color.red);
-      g2.fillRect(calculateX(95.0), calculateY(25.0), 20, 20);
-      
+      g2.fillRect(legendX, legendY3, legendBoxSize, legendBoxSize);
+ 
       g2.setColor(Color.black);
-      g2.drawString("Best fitness", calculateX(98), calculateY(49));
-      g2.drawString("Ave fitness", calculateX(98), calculateY(34));
-      g2.drawString("Low fitness", calculateX(98), calculateY(19));
-    }
+      g2.drawString("Best fitness", legendX - textMargin - 60, legendY1 + 15);
+      g2.drawString("Ave fitness", legendX - textMargin - 60, legendY2 + 15);
+      g2.drawString("Low fitness", legendX - textMargin - 60, legendY3 + 15);
+  }
+
+
+  
+  
+  
 }
