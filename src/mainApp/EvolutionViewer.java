@@ -127,51 +127,33 @@ public class EvolutionViewer {
         buttonPanel.add(elitismField);
 
         //Start Evolution
-        JButton startEvolutionButton = new JButton("Start Evolution");
-        startEvolutionButton.addActionListener(new ActionListener() {
-            Timer timer = new Timer(0, new ActionListener() {
-                int generationCount = -1;
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (generationCount == -1){
-                        evComponent.setAll(populationField.getText(), addSelectionChooser.getSelectedItem().toString(), mRateField.getText(), checkCrossover.isBorderPaintedFlat(), generationsField.getText(), genomeLengthField.getText(), elitismField.getText());
-                        generationCount++;
-                        frame.repaint();
-                    }
-                    if (generationCount <= Integer.parseInt(generationsField.getText())){
-                        evComponent.handleSelection();
-                        generationCount++;
-                        evComponent.generationCount = generationCount;
-                        frame.repaint();
-                    }
-                    else {
-                        startEvolutionButton.setText("Start Evolution");
-                        // System.out.println(evComponent.population.chromosomes.get(0).getChromosomeDataAsString());
-                        timer.restart();
+// Declare and initialize evolutionWorker as final
+final EvolutionWorker[] evolutionWorker = {null}; // Declare as an array to make it effectively final
 
-                        //TODO populationField might not be needed to be initialized here i think lawl
-                        evComponent.setAll(populationField.getText(), addSelectionChooser.getSelectedItem().toString(), mRateField.getText(), checkCrossover.isBorderPaintedFlat(), generationsField.getText(), genomeLengthField.getText(), elitismField.getText());
-                        generationCount = -1;
-                        timer.stop();
-                    }
-                }
-            });
+JButton startEvolutionButton = new JButton("Start Evolution");
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (startEvolutionButton.getText().equals("Start Evolution")){
-                    evComponent.setAll(populationField.getText(), addSelectionChooser.getSelectedItem().toString(), mRateField.getText(), checkCrossover.isBorderPaintedFlat(), generationsField.getText(), genomeLengthField.getText(), elitismField.getText());
-                    startEvolutionButton.setText("Pause");
-                    timer.start();
-                } else if (startEvolutionButton.getText().equals("Pause")){
-                    startEvolutionButton.setText("Continue");
-                    timer.stop();
-                } else if (startEvolutionButton.getText().equals("Continue")){
-                    startEvolutionButton.setText("Pause");
-                    timer.start();
-                }
+startEvolutionButton.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (startEvolutionButton.getText().equals("Start Evolution")) {
+            evComponent.setAll(populationField.getText(), addSelectionChooser.getSelectedItem().toString(), mRateField.getText(), checkCrossover.isBorderPaintedFlat(), generationsField.getText(), genomeLengthField.getText(), elitismField.getText());
+            startEvolutionButton.setText("Pause");
+            
+            // Create a new instance of EvolutionWorker
+            evolutionWorker[0] = new EvolutionWorker(evComponent, Integer.parseInt(generationsField.getText()));
+            evolutionWorker[0].execute(); // Start the SwingWorker
+        } else if (startEvolutionButton.getText().equals("Pause")) {
+            startEvolutionButton.setText("Start Evolution");
+            
+            // Cancel the worker if it's running
+            if (evolutionWorker[0] != null && !evolutionWorker[0].isDone()) {
+                evolutionWorker[0].cancel(true);
+                
             }
-        });
+        }
+    }
+});
+
         
         buttonPanel.add(startEvolutionButton);
 
