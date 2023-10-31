@@ -1,8 +1,8 @@
 package mainApp;
 
 import javax.swing.SwingWorker;
- import java.util.List;
- 
+import java.util.List;
+
 public class EvolutionWorker extends SwingWorker<Void, Void> {
     private EvolutionComponent evComponent;
     private int generations;
@@ -19,7 +19,9 @@ public class EvolutionWorker extends SwingWorker<Void, Void> {
             evComponent.handleSelection();
             evComponent.generationCount = generationCount;
             publish(); // This triggers the process method
+            System.out.println("Generation " + generationCount + " completed"); // Print a status message
         }
+        System.out.println("Evolution process completed"); // Print when the process is finished
         return null;
     }
 
@@ -29,4 +31,3 @@ public class EvolutionWorker extends SwingWorker<Void, Void> {
         evComponent.repaint();
     }
 }
-
