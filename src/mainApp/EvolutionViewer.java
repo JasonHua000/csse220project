@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
 /**
@@ -126,33 +127,33 @@ public class EvolutionViewer {
         buttonPanel.add(elitism);
         buttonPanel.add(elitismField);
 
-        //Start Evolution
-// Declare and initialize evolutionWorker as final
+
 final EvolutionWorker[] evolutionWorker = {null}; // Declare as an array to make it effectively final
 
 JButton startEvolutionButton = new JButton("Start Evolution");
 
-startEvolutionButton.addActionListener(new ActionListener() {
+
+class EvolutionActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (startEvolutionButton.getText().equals("Start Evolution")) {
             evComponent.setAll(populationField.getText(), addSelectionChooser.getSelectedItem().toString(), mRateField.getText(), checkCrossover.isBorderPaintedFlat(), generationsField.getText(), genomeLengthField.getText(), elitismField.getText());
             startEvolutionButton.setText("Pause");
-            
-            // Create a new instance of EvolutionWorker
-            evolutionWorker[0] = new EvolutionWorker(evComponent, Integer.parseInt(generationsField.getText()));
-            evolutionWorker[0].execute(); // Start the SwingWorker
+
+            evolutionWorker[0] = new EvolutionWorker(evComponent, Integer.parseInt(generationsField.getText()), startEvolutionButton);
+            evolutionWorker[0].execute();
         } else if (startEvolutionButton.getText().equals("Pause")) {
             startEvolutionButton.setText("Start Evolution");
-            
-            // Cancel the worker if it's running
+
             if (evolutionWorker[0] != null && !evolutionWorker[0].isDone()) {
                 evolutionWorker[0].cancel(true);
-                
             }
         }
     }
-});
+}        
+
+    startEvolutionButton.addActionListener(new EvolutionActionListener());
+
 
         
         buttonPanel.add(startEvolutionButton);
